@@ -56,22 +56,31 @@ query getOrder($id: ID!) {
     id
     name
     paymentGatewayNames
-    transactions(first: 50) {
-      edges {
-        node {
-          id
-          gateway
-          status
-          kind
-          processedAt
-          amountSet {
-            shopMoney {
-              amount
-              currencyCode
-            }
-          }
+    transactions(first: 10) {
+      amountSet {
+        presentmentMoney {
+          amount
+          currencyCode
+        }
+        shopMoney {
+          amount
+          currencyCode
         }
       }
+      createdAt
+      formattedGateway
+      gateway
+      id
+      kind
+      manuallyCapturable
+      maximumRefundableV2 {
+        amount
+        currencyCode
+      }
+      receiptJson
+      paymentId
+      processedAt
+      status
     }
   }
 }
