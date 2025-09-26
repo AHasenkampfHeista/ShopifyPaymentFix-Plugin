@@ -3,16 +3,11 @@
   "namespace": "ShopifyPaymentFix",
   "type": "general",
   "version": "1.0.0",
-  "license": "xXx",
   "author": "Heista GmbH",
   "email": "dev@example.com",
-  "phone": "",
   "description": {
     "de": "Ergänzt PayPal-Zahlungen für Shopify-Bestellungen mit geteilten Zahlungen.",
     "en": "Adds standalone PayPal payments for Shopify orders imported with split payments."
   },
-  "serviceProvider": "ShopifyPaymentFix\\Providers\\ShopifyPaymentFixServiceProvider",
-  "require": {},
-  "dependencies": {},
-  "runOnBuild": []
+  "serviceProvider": "ShopifyPaymentFix\\Providers\\ShopifyPaymentFixServiceProvider"
 }

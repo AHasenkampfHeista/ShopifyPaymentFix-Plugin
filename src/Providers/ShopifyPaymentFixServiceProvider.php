@@ -9,6 +9,11 @@ use ShopifyPaymentFix\EventProcedures\ShopifyPaymentProcedure;
 
 class ShopifyPaymentFixServiceProvider extends ServiceProvider
 {
+    public function register(): void
+    {
+        $this->getApplication()->register(ShopifyPaymentFixRouteServiceProvider::class);
+    }
+
     public function boot(EventProceduresService $eventProceduresService): void
     {
         $eventProceduresService->registerProcedure(
