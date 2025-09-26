@@ -57,27 +57,13 @@ query getOrder($id: ID!) {
     name
     paymentGatewayNames
     transactions(first: 10) {
-      amountSet {
-        presentmentMoney {
-          amount
-          currencyCode
-        }
-        shopMoney {
-          amount
-          currencyCode
-        }
-      }
+      amount
+      authorizationCode
       createdAt
       formattedGateway
       gateway
       id
       kind
-      manuallyCapturable
-      maximumRefundableV2 {
-        amount
-        currencyCode
-      }
-      receiptJson
       paymentId
       processedAt
       status
@@ -85,6 +71,7 @@ query getOrder($id: ID!) {
   }
 }
 GRAPHQL;
+        //receiptJson
 
         $payload = json_encode([
             'query' => $query,
