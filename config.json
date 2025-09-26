@@ -1,0 +1,54 @@
+{
+  "formatVersion": 1,
+  "menu": {
+    "global": {
+      "label": "Config.global",
+      "fullWidth": true,
+      "formFields": {
+        "global.shopName": {
+          "type": "inputText",
+          "required": true,
+          "label": "Config.globalShopNameLabel",
+          "options": {
+            "tooltip": "Config.globalShopNameTooltip"
+          }
+        },
+        "global.apiVersion": {
+          "type": "inputText",
+          "required": true,
+          "label": "Config.globalApiVersionLabel",
+          "options": {
+            "tooltip": "Config.globalApiVersionTooltip",
+            "defaultValue": "2025-01"
+          }
+        },
+        "global.accessToken": {
+          "type": "inputText",
+          "required": true,
+          "label": "Config.globalAccessTokenLabel",
+          "options": {
+            "tooltip": "Config.globalAccessTokenTooltip",
+            "isPassword": true
+          }
+        },
+        "global.paypalMopId": {
+          "type": "inputNumber",
+          "required": true,
+          "label": "Config.globalPaypalMopIdLabel",
+          "options": {
+            "tooltip": "Config.globalPaypalMopIdTooltip"
+          }
+        },
+        "global.enableDebugLog": {
+          "type": "checkBox",
+          "required": false,
+          "label": "Config.globalEnableDebugLogLabel",
+          "options": {
+            "tooltip": "Config.globalEnableDebugLogTooltip",
+            "defaultValue": "0"
+          }
+        }
+      }
+    }
+  }
+}
