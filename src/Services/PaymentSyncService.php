@@ -2,10 +2,11 @@
 
 namespace ShopifyPaymentFix\Services;
 
-use DateTimeImmutable;
 use Plenty\Modules\Payment\Contracts\PaymentOrderRelationRepositoryContract;
 use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Plenty\Modules\Payment\Models\Payment;
+use Plenty\Modules\Payment\Models\PaymentProperty;
+use Plenty\Modules\Order\Models\OrderAmount;
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Modules\Order\Models\Order;
@@ -72,7 +73,7 @@ class PaymentSyncService
             return;
         }
 
-        $receivedAt = $paypalTransaction['processedAt'] ?? (new DateTimeImmutable())->format('Y-m-d H:i:s');
+        $receivedAt = $paypalTransaction['processedAt'] ?? date('Y-m-d H:i:s');
         $currency = $paypalTransaction['currency'];
         $amount = $paypalTransaction['amount'];
         $transactionId = $paypalTransaction['transactionId'];
@@ -151,9 +152,7 @@ class PaymentSyncService
     private function hasMatchingPayment(array $existingPayments, string $transactionId, int $paypalMopId): bool
     {
         foreach ($existingPayments as $payment) {
-            $paymentArray = is_object($payment) && method_exists($payment, 'toArray')
-                ? $payment->toArray()
-                : (array) $payment;
+            $paymentArray = $this->normalizeToArray($payment);
 
             $mopId = isset($paymentArray['mopId']) ? (int) $paymentArray['mopId'] : null;
             if ($mopId !== $paypalMopId) {
@@ -162,9 +161,7 @@ class PaymentSyncService
 
             $properties = $paymentArray['properties'] ?? [];
             foreach ($properties as $property) {
-                $propertyData = is_object($property) && method_exists($property, 'toArray')
-                    ? $property->toArray()
-                    : (array) $property;
+                $propertyData = $this->normalizeToArray($property);
                 if ((int) ($propertyData['typeId'] ?? 0) === 1 && (string) ($propertyData['value'] ?? '') === $transactionId) {
                     return true;
                 }
@@ -178,9 +175,7 @@ class PaymentSyncService
     {
         $amounts = $order->amounts ?? [];
         foreach ($amounts as $amount) {
-            $amountData = is_object($amount) && method_exists($amount, 'toArray')
-                ? $amount->toArray()
-                : (array) $amount;
+            $amountData = $this->normalizeToArray($amount);
 
             $currency = $amountData['currency'] ?? null;
             if ($currency === null) {
@@ -198,5 +193,30 @@ class PaymentSyncService
         }
 
         return 1.0;
+    }
+
+    private function normalizeToArray($value): array
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        if ($value instanceof Payment || $value instanceof PaymentProperty || $value instanceof OrderAmount) {
+            return $value->toArray();
+        }
+
+        if (is_object($value)) {
+            $json = json_encode($value);
+            if (is_string($json)) {
+                $decoded = json_decode($json, true);
+                if (is_array($decoded)) {
+                    return $decoded;
+                }
+            }
+
+            return (array) $value;
+        }
+
+        return [];
     }
 }
